@@ -1,0 +1,146 @@
+				                "Welcome To Ashok IT"
+                                   		 "Oracle Database"
+                                 	         Topic : SQL Constraints(Foreign Key)
+                               		         Date  : 17/12/2022
+                                                  (Session - 18)
+_____________________________________________________________________________________________________________________________
+Important Information
+*********************
+>> Oracle Class Notes    ::: https://github.com/ashokitschool/ORACLE_CLASS_NOTES
+
+>> Class Recording       ::: Will be available through Ashok IT Portal
+
+>> Class Related Updates "Join In WhatsApp Group" check with Admin Team.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Yesterday Session:
+==================
+>> We completed understanding and working with Primary key in Database Software.
+
+Today Session : Foreign key
+===========================
+* Foreign key constraint is used to establish the parent-child relatioship between the Database Tables.
+
+* We can define multiple columns as foreign key in the Database Table.
+
+* In Realtime Application development definetly will have multiple tables having relationships and that can be achieved   through foreign key constraint.
+
+* The table which contains the primary key is called "Parent Table".
+
+* The table which references column of primary key in another table is called "Child Table".
+
+Example
+=======
+
+   We are maintaining employee basic information in one table i.e., ashokit_employees_info
+
+   we are maintaining employee salaries information in another table i.e.,ashokit_employees_salaries_info
+
+   we are mainitaing employee bonuses information in another table i.e.,ashokit_employees_bonuses_info
+
+
+ Client Requirement : Build an report (or) extract the information from the Database all employees related basic                       information,salary information,bonuses information
+
+Syntax For creating Foreign Key
+===============================
+CREATE TABLE child_table (
+    ...
+    CONSTRAINT fk_name
+    FOREIGN KEY(col1, col2,...) REFERENCES parent_table(col1,col2) 
+    ON DELETE [ CASCADE | SET NULL ]
+);
+
+
+Example for Creating Parent-Child Table
+=======================================
+-- creating parent Table 
+create table ashokit_companies_info(company_code varchar2(10),
+                                    company_name varchar2(30) not null,
+                                    country varchar2(50) not null,
+                                    constraint ashokit_comp_cde_pk primary key(company_code)
+                                    );
+                                    
+-- creating child table
+create table ashokit_products_info(pid varchar2(10) primary key,
+                                   pname varchar2(30) not null,
+                                   pcost number,
+                                   pmfg_dt date not null,
+                                   pwarranty varchar2(50) not null,
+                                   company_code varchar2(10),                                   
+                                   constraint ashokit_comp_code_fk foreign key(company_code) 
+                                   references ashokit_companies_info(company_code)
+                                  );
+
+
+OUTPUT
+======
+
+Table ASHOKIT_COMPANIES_INFO created.
+
+
+Table ASHOKIT_PRODUCTS_INFO created.
+
+Insert Statements
+=================
+-- inserting the data into parent table
+insert into ashokit_companies_info values('CMP1','SONY','JAPAN');
+insert into ashokit_companies_info values('CMP2','ASUS','SOUTH KOREA');
+
+-- inserting the data into child table
+insert into ashokit_products_info values('P001','Mobile',14000,'05-AUG-2022','1YEAR','CMP1');
+insert into ashokit_products_info values('P002','Laptop',12000,'15-FEB-2021','2YEAR','CMP2');
+insert into ashokit_products_info values('P003','Tablet',11000,'25-MAR-1998','3YEAR','CMP2');
+insert into ashokit_products_info values('P004','Camera',10000,'23-SEP-1999','4YEAR','CMP1');
+insert into ashokit_products_info values('P005','MOUSE',5000,'21-SEP-1997','5YEAR','CMP3');
+
+ASHOKIT_COMPANIES_INFO 
+=====================
+CMP1	SONY	JAPAN
+CMP2	ASUS	SOUTH KOREA
+
+ASHOKIT_PRODUCTS_INFO 
+=====================
+P001	Mobile	14000	05-AUG-22	1YEAR	CMP1
+P002	Laptop	12000	15-FEB-21	2YEAR	CMP2
+P003	Tablet	11000	25-MAR-98	3YEAR	CMP2
+P004	Camera	10000	23-SEP-99	4YEAR	CMP1
+
+Error Scenario
+==============
+insert into ashokit_products_info values('P005','MOUSE',5000,'21-SEP-1997','5YEAR','CMP3');
+
+Error Message
+=============
+Error starting at line : 28 in command -
+insert into ashokit_products_info values('P005','MOUSE',5000,'21-SEP-1997','5YEAR','CMP3')
+Error report -
+ORA-02291: integrity constraint (MAHESH.ASHOKIT_COMP_CODE_FK) violated - parent key not found
+
+SQL QUERIES
+============
+alter table ashokit_products_info add constraint ASHOKIT_COMP_CODE_FK foreign key(company_code) 
+REFERENCES ashokit_companies_info(company_code);
+
+ALTER TABLE ashokit_products_info DROP CONSTRAINT ASHOKIT_COMP_CODE_FK;
+
+=================================================
+Add a foreign key constraint to a Exisiting table
+=================================================
+>> ALTER TABLE child_table  ADD CONSTRAINT fk_name FOREIGN KEY (col1,col2) REFERENCES parent_table(col1,col2);
+
+==============================
+Drop a foreign key constraint
+==============================
+>> ALTER TABLE child_table DROP CONSTRAINT fk_name;
+
+===============================
+Disable a foreign key constraint
+================================
+>> ALTER TABLE child_table DISABLE CONSTRAINT fk_name;
+
+===========================
+Enable a foreign constraint
+===========================
+ALTER TABLE child_table ENABLE CONSTRAINT fk_name;
+
+mahesh.ashokit@gmail.com
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

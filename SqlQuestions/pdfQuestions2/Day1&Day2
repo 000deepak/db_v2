@@ -1,0 +1,68 @@
+# 📘 SQL DAY 1 & DAY 2 NOTES
+
+## 🟢 What is SQL?
+
+- SQL stands for **Structured Query Language**
+- Used to communicate with databases
+
+---
+
+## 🟡 Data
+
+**Data** is raw information that describes attributes of an entity.
+
+**Examples:**
+- Person: Name, Phone, DOB, Gender
+- Laptop: Brand, RAM, Storage
+- Bottle: Height, Color, Capacity
+
+---
+
+## 🟠 Database
+
+A **database** stores data in a systematic way.
+
+**CRUD Operations:**
+- Create / Insert
+- Read / Retrieve
+- Update / Modify
+- Delete / Drop
+
+---
+
+## 🔵 DBMS (Database Management System)
+
+A software used to manage databases.
+
+**Features:**
+- Security
+- Authorization
+
+---
+
+## 🔴 RDBMS (Relational Database Management System)
+
+Stores data in tables (rows & columns)
+
+**Examples:**
+
+| EMPNO | Name | Salary |
+|-------|------|--------|
+| 1     | A    | 5000   |
+| 2     | B    | 6000   |
+
+---
+
+## 🟣 Relational Model
+
+- Proposed by **E.F. Codd**
+- Forms the basis for RDBMS
+- Follows rules (like data in tables, unique rows, etc.)
+
+---
+
+## 🔘 Table
+
+- Logical structure of rows (records) and columns (attributes)
+- Smallest unit: **cell** (intersection of row and column)
+

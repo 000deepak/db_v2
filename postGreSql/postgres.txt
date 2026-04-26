@@ -1,0 +1,923 @@
+                  _                            _
+                 | |                          | |
+  _ __   ___  ___| |_ __ _ _ __ ___  ___  __ _| |
+ | '_ \ / _ \/ __| __/ _` | '__/ _ \/ __|/ _` | |
+ | |_) | (_) \__ \ || (_| | | |  __/\__ \ (_| | |
+ | .__/ \___/|___/\__\__, |_|  \___||___/\__, |_|
+ | |                  __/ |                 | |
+ |_|                 |___/                  |_|
+
+
+**** DATA TYPES **** (source: http://postgres-data-types.pvh.ca/#8)
+- Surrogates key:
+
+    Use bigserial (don't use serial)
+
+
+    CREATE EXTENSION "uuid-ossp";
+    > SELECT uuid_generate_v4();
+
+    CREATE EXTENSION pgcrypto;
+    > SELECT gen_random_uuid();
+
+    (Or create the UUIDs in the client.)
+
+- Text (avoid varchar, char) -> text is faster
+
+    CREATE INDEX ON users (name);
+    > SELECT * FROM accounts WHERE email LIKE 'Peter%';
+
+    CREATE INDEX backsearch ON users (reverse(email));
+    > SELECT * FROM accounts WHERE reverse(email) LIKE reverse('%doe.com')
+
+
+    Other searchs:
+
+    CREATE INDEX ON products USING gin(tsv);
+    > SELECT * FROM users WHERE name ~ '(John|Jane)\s+Doe';
+
+- Times & Dates: timestamptz always ! and date (when u only need the date)
+
+    date_trunc():
+
+        SELECT date_trunc('week', now())::date; -- Beginning of the current week
+
+        SELECT date_trunc('day', created_at), count(*)
+        FROM users GROUP BY date_trunc('day', created_at) -- Users created by day
+
+        SELECT now() - '1 year'::interval; -- a year ago
+
+        SELECT generate_series(date_trunc('month', now() - '1 month'::interval),
+                               date_trunc('month', now()), '1 day'::interval)
+
+- Use bool, not bit
+
+- bytea: consider if Postgres is the right solution
+
+    Don't use
+        money: not up to modern standards
+        timestamp: use timestamptz
+        time: you probably meant timestamptz
+        serial: use bigserial
+
+    Are you sure?
+        float / integer: use numeric
+        bitstring: premature optimization
+        xml: libxml2 is awful, but...
+        json: you probably want jsonb
+
+- Array:
+
+    Construction:
+        SELECT ARRAY[1, 2, 3];
+        SELECT '{1, 2, 3}'::numeric[];
+
+        Extend your array:
+            SELECT ARRAY[1,2] || 3;
+            SELECT ARRAY[1,2] || ARRAY[3, 4];
+
+        SELECT array_agg(distinct users) from events where name = 'PGDay.RU';
+
+    (Remember SQL arrays are 1-indexed!)
+    SELECT ('{one, two, three}'::text[])[1]; -- one
+
+    CREATE INDEX ON table USING gin(tags); -- because fast!
+    SELECT * FROM table WHERE tags @> array['sometag'];
+    (GIN indexes are great here)
+
+- jsonb:
+
+    When:
+        -Convenient short-lived or occasional attribute storage.
+            (Honour demands that I insist you make these columns if they get used often.)
+
+        -Hierarchical data.
+
+         {"name": "car",
+          "id": 91371
+          "parts": [
+            {
+              "name": "engine"
+              "id": 3241,
+              "parts": [
+                {
+                  "name": "crankshaft",
+                  "id": 23991,
+                  ...
+
+        -The data is already JSON.
+
+    Index:
+        Usually add a GIN index.
+        CREATE INDEX ON users USING gin(attrs);
+
+    Construction:
+        select '{"a": "b"}'::jsonb
+
+    Adding:
+        UPDATE documents
+          SET contents = content || '{"new_field": "goes here"}'
+          WHERE document_id = 32421;
+
+    Accessing:
+        select attrs->>'presenter_irc_nick' from talks
+        select attrs->'previous_presentation'->>'location' from talks
+        SELECT jsonb_extract_path_text(attrs,
+          'previous_presentation', 'location') -- whole path
+
+    Decomposing:
+        select * from json_to_recordset(
+          '[{"a":1,"b":"foo"},{"a":"2","c":"bar"}]') as x(a int, b text);
+
+
+    Searching:
+        SELECT * FROM talks WHERE attrs ? 'previous_presentation' -- document with a certain key
+        SELECT * FROM talks WHERE attrs @> '{"previous_presentation": "PGCon"}' -- or a whole subdocument
+
+Enum:
+    Not worth at coeli... you need a migration for each new value you want to add and you still can achieve similar behaviour with a text check in (enum.value1, enum.value2, ...)
+
+    CREATE TYPE weekdays AS ('Mon', 'Tue', 'Wed', 'Thu', 'Fri');
+
+
+Ranges:
+
+    Creation:
+        -INSERT INTO reservation VALUES ('[2016-01-01 11:30, 2016-01-01 15:00)');
+        -SELECT tstzrange(created_at, deleted_at) FROM users;
+
+    Active users on xmas day:
+        CREATE INDEX ON users USING GIST( tstzrange(created_at, deleted_at) );
+
+        SELECT *
+        FROM users
+        WHERE tstzrange(created_at, deleted_at) @> '2015-12-25'::timestamptz
+
+    SELECT * FROM events WHERE range @> now() - '4 hours';
+
+Extension Types:
+
+    - email address: don't use  text!
+
+        SELECT * FROM users WHERE email LIKE '%@bigcorp.com' -- bad
+        SELECT * FROM users WHERE reverse(email) LIKE reverse('%@bigcorp.com') -- still ugly
+        SELECT user(email) FROM users WHERE host(email) = 'bigcorp.com' -- best option
+
+    - same for URL/uri
+
+        You don't need to migrate from text -> url
+
+        SELECT 'http://google.com/'::uri
+        SELECT host('http://google.com/'::uri)
+
+Special-purpose types:
+
+-Do-it-yourself data types:
+
+    When?
+        Create your own types that constrain existing types.
+
+        - roll your own email type
+        - a more specific URI
+
+    Examples:
+
+        CREATE DOMAIN email AS TEXT CHECK(VALUE ~ '.+\@.+'); -- mock
+
+            Real email example:
+
+            CREATE EXTENSION citext;
+            CREATE DOMAIN email AS citext
+              CHECK ( value ~ '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$' );
+
+            DIY function:
+
+                CREATE OR REPLACE FUNCTION host(email) RETURNS text
+                LANGUAGE sql AS $$
+                  select split_part($1, '@', 2) as return;
+                $$;
+
+            DIY operator:
+
+                CREATE OPERATOR @-> (
+                  LEFTARG = 'email',
+                  PROCEDURE = 'host');
+
+                > SELECT email@-> FROM emails LIMIT 1;
+
+        CREATE DOMAIN web_url AS uri CHECK ( (uri_scheme(value) = 'http' OR uri_scheme(value) = 'https')  AND uri_host(value) IS NOT null);
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+------------------------------------------------------------------
+
+**** Mastering postgreSQL in Application Development *****
+
+select length('josé'); -- 4 characters
+select octet_length('josé') -- 5 bytes
+
+---------------------
+
+select cast(date as date)   as date,
+to_char(date, 'Dy')  as day,
+coalesce(dollars, 0) as dollars,
+lag(dollars, 1)
+over(
+ partition by extract('isodow' from date)
+     order by date
+) as last_week_dollars
+
+-----------------
+
+generate_series(date :'start',
+        date :'start' + interval '1 month' - interval '1 day',
+        interval '1 day')
+as calendar(entry)
+
+---------------------
+
+select date, day,
+         to_char(
+             coalesce(dollars, 0),
+             'L99G999G999G999'
+         ) as dollars,
+         case when dollars is not null
+               and dollars <> 0
+              then round(  100.0
+                         * (dollars - last_week_dollars)
+                         / dollars
+                       , 2)
+          end
+         as "WoW %"
+    from computed_data
+   where date >= date :'start'
+order by date;
+
+---------------------
+Stored procedures: ok if they are in plain SQL (avoid sending the query over the network)
+
+create or replace function get_all_albums
+ (
+   in  name     text,
+   out album    text,
+   out duration interval
+ )
+returns setof record
+language sql
+as $$
+  select album.title as album,
+         sum(milliseconds) * interval '1 ms' as duration
+    from album
+         join artist using(artistid)
+         left join track using(albumid)
+   where artist.name = get_all_albums.name
+group by album
+order by album;
+$$;
+
+---------------------
+You can unit testing queries with postgres
+
+-------------------
+select date::date,
+       extract('isodow' from date) as dow,
+       to_char(date, 'dy') as day,
+       extract('isoyear' from date) as "iso year",
+       extract('week' from date) as week,
+       extract('day' from
+               (date + interval '2 month - 1 day')
+              )
+        as feb,
+       extract('year' from date) as year,
+       extract('day' from
+               (date + interval '2 month - 1 day')
+              ) = 29
+       as leap
+  from generate_series(date '2000-01-01',
+                       date '2010-01-01',
+                       interval '1 year')
+       as t(date);
+
+-------------------
+Be careful:
+
+     select x
+      from generate_series(1, 100) as t(x)
+     where x not in (1, 2, 3, null);
+
+        -- return 0 rows
+
+-------------------
+select drivers.code, drivers.surname,
+       position,
+       laps,
+       status
+  from results
+       join drivers using(driverid)
+       join status using(statusid)
+ where raceid = 972
+order by position nulls last,
+         laps desc,
+         case when status = 'Power Unit'
+              then 1
+              else 2
+          end;
+-------------------
+create index on f1db.circuits using gist(position);
+
+select name, location, country
+    from circuits
+order by point(lng,lat) <-> point(2.349014, 48.864716)
+   limit 10;
+
+-------------------
+
+with decades as
+(
+   select extract('year' from date_trunc('decade', date)) as decade
+     from races
+ group by decade
+)
+select decade,
+       rank() over(partition by decade
+                   order by wins desc)
+       as rank,
+       forename, surname, wins
+
+  from decades
+       left join lateral
+       (
+          select code, forename, surname, count(*) as wins
+            from drivers
+
+                 join results
+                   on results.driverid = drivers.driverid
+                  and results.position = 1
+
+                 join races using(raceid)
+
+           where   extract('year' from date_trunc('decade', races.date))
+                 = decades.decade
+
+        group by decades.decade, drivers.driverid
+        order by wins desc
+           limit 3
+        )
+       as winners on true
+
+order by decade asc, wins desc;
+
+-------------------
+
+Pagination: do not use offset
+
+select lap, drivers.code, position,
+       milliseconds * interval '1ms' as laptime
+       from laptimes
+            join drivers using(driverid)
+      where raceid = 972
+        and row(lap, position) > (1, 3)
+      order by lap, position
+fetch first 3 rows only;
+
+-------------------
+
+with races_per_decade
+as (
+      select extract('year'
+                     from
+                     date_trunc('decade', date))
+             as decade,
+             count(*) as nbraces
+        from races
+      group by decade
+      order by decade
+   )
+select decade, nbraces,
+       case
+         when lag(nbraces, 1)
+               over(order by decade) is null
+         then ''
+
+         when nbraces - lag(nbraces, 1) over(order by decade)  < 0
+         then format('-%3s',
+                lag(nbraces, 1)
+               over(order by decade)
+               - nbraces)
+
+         else format('+%3s',
+                nbraces
+              - lag(nbraces, 1)
+               over(order by decade))
+
+        end as evolution
+from races_per_decade;
+-------------------
+
+with counts as
+ (
+   select driverid, forename, surname,
+          count(*) as races,
+          bool_and(position is null) as never_finished
+     from drivers
+          join results using(driverid)
+          join races using(raceid)
+ group by driverid
+ )
+   select driverid, forename, surname, races
+     from counts
+    where never_finished
+ order by races desc;
+
+-------------------
+
+\set season 'date ''1978-01-01'''
+
+    select drivers.surname as driver,
+           constructors.name as constructor,
+           sum(points) as points
+
+      from results
+           join races using(raceid)
+           join drivers using(driverid)
+           join constructors using(constructorid)
+
+   where date >= :season
+     and date <  :season + interval '1 year'
+
+  group by grouping sets((drivers.surname),
+                         (constructors.name))
+    having sum(points) > 20
+
+  order by constructors.name is not null,
+           drivers.surname is not null,
+           points desc;
+
+  driver   │ constructor │ points
+═══════════╪═════════════╪════════
+ Andretti  │ ¤           │     64
+ Peterson  │ ¤           │     51
+ Reutemann │ ¤           │     48
+ Lauda     │ ¤           │     44
+ Depailler │ ¤           │     34
+ Watson    │ ¤           │     25
+ Scheckter │ ¤           │     24
+ ¤         │ Team Lotus  │    116
+ ¤         │ Brabham     │     69
+ ¤         │ Ferrari     │     65
+ ¤         │ Tyrrell     │     41
+ ¤         │ Wolf        │     24
+(12 rows)
+
+
+-------------------
+select drivers.surname as driver,
+           constructors.name as constructor,
+           sum(points) as points
+
+      from results
+           join races using(raceid)
+           join drivers using(driverid)
+           join constructors using(constructorid)
+
+      where drivers.surname in ('Prost', 'Senna')
+
+group by rollup(drivers.surname, constructors.name);
+
+ driver │ constructor │ points
+════════╪═════════════╪════════
+ Prost  │ Ferrari     │    107
+ Prost  │ McLaren     │  458.5
+ Prost  │ Renault     │    134
+ Prost  │ Williams    │     99
+ Prost  │ ¤           │  798.5
+ Senna  │ HRT         │      0
+ Senna  │ McLaren     │    451
+ Senna  │ Renault     │      2
+ Senna  │ Team Lotus  │    150
+ Senna  │ Toleman     │     13
+ Senna  │ Williams    │     31
+ Senna  │ ¤           │    647
+ ¤      │ ¤           │ 1445.5
+(13 rows)
+
+-------------------
+with points as
+(
+    select year as season, driverid, constructorid,
+           sum(points) as points
+      from results join races using(raceid)
+    group by grouping sets((year, driverid),
+                         (year, constructorid))
+    having sum(points) > 0
+    order by season, points desc
+),
+tops as
+(
+    select season,
+           max(points) filter(where driverid is null) as ctops,
+           max(points) filter(where constructorid is null) as dtops
+      from points
+    group by season
+    order by season, dtops, ctops
+),
+champs as
+ (
+    select tops.season,
+           champ_driver.driverid,
+           champ_driver.points,
+           champ_constructor.constructorid,
+           champ_constructor.points
+
+      from tops
+           join points as champ_driver
+             on champ_driver.season = tops.season
+            and champ_driver.constructorid is null
+            and champ_driver.points = tops.dtops
+
+           join points as champ_constructor
+             on champ_constructor.season = tops.season
+            and champ_constructor.driverid is null
+            and champ_constructor.points = tops.ctops
+  )
+select season,
+     format('%s %s', drivers.forename, drivers.surname)
+        as "Driver's Champion",
+     constructors.name
+        as "Constructor's champion"
+from champs
+     join drivers using(driverid)
+     join constructors using(constructorid)
+order by season;
+
+-------------------
+(
+      select driverid,
+             format('%s %s',
+                    drivers.forename,
+                    drivers.surname)
+             as name
+
+        from results
+             join drivers using(driverid)
+
+       where raceid = 972
+         and points = 0
+)
+except
+(
+      select driverid,
+             format('%s %s',
+                    drivers.forename,
+                    drivers.surname)
+             as name
+
+        from results
+             join drivers using(driverid)
+
+       where raceid = 971
+         and points = 0
+)
+
+-------------------  Three-valued logic: is distinct from / is not distinct from
+
+“select a::text, b::text,
+       (a=b)::text as "a=b",
+       format('%s = %s',
+              coalesce(a::text, 'null'),
+              coalesce(b::text, 'null')) as op,
+       format('is %s',
+              coalesce((a=b)::text, 'null')) as result
+  from (values(true), (false), (null)) v1(a)
+       cross join
+       (values(true), (false), (null)) v2(b);”
+
+   a   │   b   │  a=b  │      op       │  result
+═══════╪═══════╪═══════╪═══════════════╪══════════
+ true  │ true  │ true  │ true = true   │ is true
+ true  │ false │ false │ true = false  │ is false
+ true  │ ¤     │ ¤     │ true = null   │ is null
+ false │ true  │ false │ false = true  │ is false
+ false │ false │ true  │ false = false │ is true
+ false │ ¤     │ ¤     │ false = null  │ is null”
+ ¤     │ true  │ ¤     │ null = true   │ is null
+ ¤     │ false │ ¤     │ null = false  │ is null
+ ¤     │ ¤     │ ¤     │ null = null   │ is null
+
+------------------- Normal forms
+
+1NF:
+    1. No duplicate row
+    2. each cell is single-valued
+    3. entries in a column are the same type
+
+2NF: 1NF and all-non key attributes are dependent of all of the key
+
+3NF: 2NF and it has no transitive dependencies
+    - Example: iso code and country are transitive no matter in which row they are.
+               You must add a table for iso-country and you rows have a fk to it.
+
+Boyce-Codd Normal Form (BCNF):
+    A table is in BCNF if it is in 3NF and if every determinant is a candidate key.
+
+4NF, 5NF, DKNF ...
+
+-------------------
+
+
+more.... page 213
+
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+------------------------------------------------------------------
+
+Not using bind parameters is like recompiling a program every time.
+
+Transactions:
+    - bundles multiple steps into a single, all-or-nothing operation.
+    - effects are not visible until the transaction completes
+    - BEGIN ... COMMIT/ROLLBACK
+    - savepoints: changes earlier than the savepoint are kept
+        -  SAVEPOINT my_savepoint ... ROLLBACK TO my_savepoint
+    - each transaction sees a snapshot of data:
+        - this protect you from viewing inconsistent data
+        - but it does not protect you from:
+            user1: SELECT price // price 100
+            user2: UPDATE price+50 // price 150
+            user1: UPDATE price+50 // price 150
+            WRONG
+Concurrency control:
+    - Read lock  and Write lock //they do not conflict
+    - Transaction isolation:
+        - Dirty read: read data by a concurrent uncommited transaction
+        - Nonrepeatable read: data being modified by another transaction
+        - Phantom read: query with search condition, conditions' row are modified, re-query does not return the same rows
+
+    Isolation Level         dirty       nonrepeatable   phantom
+
+    Read uncommitted	    Possible	Possible	    Possible
+    Read committed	    Not possible	Possible	    Possible       // DO NOT USED FOR COMPLEX QUERIES AND UPDATES
+    Repeatable read	    Not possible	Not possible	Possible
+    Serializable	    Not possible	Not possible	Not possible
+
+    - Internally only exists READ COMMITTED, SERIALIZABLE (the others are fake in postgresql)
+        - Postgresql: SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+
+    - Default: read committed
+        - a SELECT query sees a snapshot of the database as of the instant that that query begins to run
+            - two successive SELECT commands can see different data
+        - such a target row might have already been updated (or deleted or locked) by another concurrent transaction by the time it is found
+
+        Two concurrent transactions
+
+        BEGIN;
+        UPDATE accounts SET balance = balance + 100.00 WHERE acctnum = 12345;
+        UPDATE accounts SET balance = balance - 100.00 WHERE acctnum = 7534;
+        COMMIT;
+
+    - Serializable:
+        - target row being updated by another concurrent transaction
+            - if the other transaction rollbacks: continue
+            - if the other transaction commits: our transactions rollback
+        - only updating transactions might need to be retried
+
+       class | value
+      -------+-------
+           1 |    10
+           1 |    20
+           2 |   100
+           2 |   200
+
+       T1: INSERT INTO mytab VALUES 2, SELECT SUM(value) FROM mytab WHERE class = 1;
+       T2: SELECT SUM(value) FROM mytab WHERE class = 1;
+
+       (T1 and T2 are concurrent transactions)
+
+       T2 will compute 300 // wrong
+
+        - Solution:
+            - predicate locking (T2 can't modify a row that matched a WHERE condition in T1)
+                - postgresql does NOT implement predicate locking 😎
+
+            - explicit locking
+
+
+    -Explicit Locking:
+        - Lock is normally held till end of transaction (or savepoint)
+
+        - Table-Level Locks (TABLE, don't pay attention to names)
+            - ACCESS SHARE:
+                - conflict: ACCESS EXCLUSIVE
+                - any query that only read a table and does not modify it will acquire this lock mode
+
+            - ROW SHARE:
+                - conflict: EXCLUSIVE and ACCESS EXCLUSIVE
+                - SELECT FOR UPDATE / FOR SHARE will use this lock on target table(s)
+
+            - ROW EXCLUSIVE:
+                - conflict SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE and ACCESS EXCLUSIVE
+                - UPDATE, DELETE and INSERT (any command that modifies the data table)
+
+            - SHARE UPDATE EXCLUSIVE:
+                - conflict:  SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, and ACCESS EXCLUSIVE
+                - This mode protects a table against concurrent schema changes and VACUUM runs.
+                - VACUUM (without FULL), ANALYZE, and CREATE INDEX CONCURRENTLY.
+
+            - SHARE
+                - Conflicts with the ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE ROW EXCLUSIVE, EXCLUSIVE, and ACCESS EXCLUSIVE
+                - CREATE INDEX (without CONCURRENTLY).
+
+            - SHARE ROW EXCLUSIVE:
+                - Conflicts with the ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, and ACCESS EXCLUSIVE
+
+            - EXCLUSIVE:
+                - conflict:  ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, and ACCESS EXCLUSIVE
+
+            - ACCESS EXCLUSIVE:
+                - Conflicts with locks of all modes
+                - Acquired by the ALTER TABLE, DROP TABLE, TRUNCATE, REINDEX, CLUSTER, and VACUUM FULL commands.
+                - default lock mode for LOCK TABLE statements
+
+        Requested Lock Mode	                                        Current Lock Mode
+                                ACCESS SHARE   ROW SHARE	ROW EXCLUSIVE	 SHARE UPDATE EXCLUSIVE	   SHARE	SHARE ROW EXCLUSIVE	     EXCLUSIVE	    ACCESS EXCLUSIVE
+        ACCESS SHARE	 	 	 	 	 	                                                                                                           	 	 X
+        ROW SHARE	 	 	                                                                	 	 	 	                                   X	         X
+        ROW EXCLUSIVE	 	 	 	                                                                   	X	            X	                   X	         X
+        SHARE UPDATE EXCLUSIVE	 	 	 	                                            X              	X	            X	                   X	         X
+        SHARE	 	                                               X                    X  	                          	X	                   X	         X
+        SHARE ROW EXCLUSIVE	 	                                   X                    X  	            X              	X	                   X	         X
+        EXCLUSIVE                                  X               X                    X  	            X              	X	                   X	         X
+        ACCESS EXCLUSIVE             X             X               X                    X  	            X              	X	                   X	         X
+
+
+        -Row-Level Locks
+            - automatically acquired when the row is updated or deleted
+            - held until the transaction commits or rolls back
+            - Row-level do NOT affect data querying, they block writers to the same row only.
+
+    - Dangers of explicits locks:
+
+        - Deadlocks:
+            T1: EXCLUSIVE table A; then tries to EXCLUSIVE table B
+            T2: EXCLUSIVE table B; then tries to EXCLUSIVE table A
+
+            - Can happen in row-level without an explicit lock
+
+            T1: UPDATE accounts SET balance = balance + 100.00 WHERE acctnum = 11111;
+            T2: UPDATE accounts SET balance = balance + 100.00 WHERE acctnum = 22222;
+                UPDATE accounts SET balance = balance - 100.00 WHERE acctnum = 11111;
+            T1: UPDATE accounts SET balance = balance - 100.00 WHERE acctnum = 22222;
+
+            - Postgresql detects deadlocks and abort one of the transactions 😇
+
+
+    - Advisory Locks:
+        - held until the end of the season
+        - TODO
+
+    - SELECT FOR UPDATE
+        - lock the resource until the current transaction ends (does not lock SELECT)
+        - if another T has the lock, it will wait.
+    - SELECT FOR SHARE
+        - same as update but does not lock for another SELECT FOR SHARE
+
+
+Performance tips to populate db:
+    - Disable autocommit
+    - Use COPY instead of N INSERTs
+    - Creating an index/foreing key is faster than updating it at each insert
+
+Study case:
+
+    https://blog.2ndquadrant.com/postgresql-anti-patterns-read-modify-write-cycles/ ---
+	SELECT balance FROM accounts WHERE user_id = 1;
+	-- in the application, subtract 100 from balance if it's above
+	-- 100; and, where ? is the new balance:
+	UPDATE accounts SET balance = ? WHERE user_id =1;
+
+	this code is critically wrong, and will malfunction as soon as the same user is updated by two different sessions at the same time.
+
+    - Solutions:
+
+     1) Avoiding the read-modify-write with a calculated update
+        UPDATE accounts SET balance = balance - 100 WHERE user_id = 1; (sets balance=200)
+
+     2) Row level locking with SELECT ... FOR UPDATE (locks only in the transaction life cycle)
+        BEGIN;
+        SELECT balance FROM accounts WHERE user_id = 1 FOR UPDATE;
+        UPDATE balance SET balance = ??? WHERE user_id = 1;
+        END;
+
+     3) Use of SERIALIZABLE transactions
+        BEGIN ISOLATION LEVEL SERIALIZABLE;
+        ....
+        END;
+
+        SERIALIZABLE isolation can force applications to repeat a lot of work if a big transaction aborts or if conflicts are common. It’s very useful for complex cases where attempting to use row locking might just cause deadlocks, though.
+
+     4) Optimistic concurrency control, otherwise known as optimistic locking
+        In this scheme, all tables have a version column or last-updated timestamp, and all updates have an extra WHERE clause entry that checks to make sure the version column hasn’t changed since the row was read. The application checks to see if any rows were affected by the UPDATE and if none were affected, treats it as an error and aborts the transaction.
+
+
+SKIP LOCKED:
+
+    Most work queue implementations in SQL are wrong
+
+    - Find me the next unclaimed row:
+
+        UPDATE queue
+        SET is_done = 't'
+        WHERE itemno = (
+          SELECT itemno
+          FROM queue
+          WHERE NOT is_done
+          ORDER BY itemno
+          FOR UPDATE
+          LIMIT 1
+        )
+        RETURNING itemno
+
+    - Why this fails:
+
+        If two are started at exactly the same moment, the subSELECTs for each will be processed first.
+        (It’s not that simple, but we can pretend for this purpose. Don’t rely on subqueries executing in any particular order for correctness).
+        Each one scans for a row with is_done = 'f'. Both find the same row and attempt to lock it. One succeeds, one waits on the other one’s lock.
+        Whoops, your “concurrent” queue is serialized. If the first xact to get the lock rolls back the second gets the row and tries the same row.
+
+        If the first xact commits, the second actually gets zero rows and UPDATE and returns nothing.
+        PostgreSQL doesn’t re-execute the SELECT part, it just notices that the row was modified by another transaction
+         while locked and re-evaluates the WHERE clause for the row. Since is_done = 't' now, the row no longer matches the condition and is excluded.
+         The subquery returns zero rows, which is null, and no itemid is = NULL because nothing is equal to null, so the UPDATE does nothing.
+
+
+    - SKIP LOCKED tries to make this easier by letting you use normal SQL to write efficient, safe queue systems
+
+    Given:
+
+        CREATE TABLE queue(
+          itemid INTEGER PRIMARY KEY,
+          is_done BOOLEAN NOT NULL DEFAULT 'f'
+        );
+
+        INSERT INTO queue(itemid)
+        SELECT x FROM generate_series(1,20) x;
+
+    an application can grab a single queue item safely while holding an open transaction with:
+
+        DELETE FROM queue
+        WHERE itemid = (
+          SELECT itemid
+          FROM queue
+          ORDER BY itemid
+          FOR UPDATE SKIP LOCKED
+          LIMIT 1
+        )
+        RETURNING *;
+
+    How it works:
+
+        Scans the queue table in itemid order
+        Tries to acquire a lock on each row. If it fails to acquire the lock, it ignores the row as if it wasn’t in the table at all and carries on.
+        Stops scanning once it’s locked one item
+        Returns the itemid of the locked item
+        Looks up the found itemid in the index to get its physical location
+        Marks the tuple as deleted (but this doesn’t take effect until commit)
+
+        The open transaction holds a lock on the row now. Other transactions will skip it so long as this transaction keeps on running.
+         If this transaction aborts, the row becomes unlocked and the deletion is undone by the abort so another transaction can grab the row.
+          If this transaction commits, the deletion is committed along with the other changes in the xact, so other xacts won’t see the queue item anymore.
+
+    Example of use:
+
+        BEGIN;
+
+        DELETE FROM pending_balance_transfers
+        WHERE itemid = (
+          SELECT itemid FROM pending_balance_transfers
+          ORDER BY itemid
+          FOR UPDATE SKIP LOCKED
+          LIMIT 1
+        )
+        RETURNING itemid, from_customer, to_customer, amount;
+
+        -- Do its processing and database updates in the same transaction
+        -- now, e.g.: if the queue contained "transfer balance of $100 from customer A to customer B"
+        -- we might:
+
+        UPDATE bank_balances
+        SET balance = balance + 100
+        WHERE customerid = 'customer_a';
+
+        UPDATE bank_balances
+        SET balance = balance - 100
+        WHERE customerid = 'customer_b';
+
+        -- and when it commits, the queue entry is marked completed atomically with
+        -- the work that was queued being committed.
+
+        COMMIT;

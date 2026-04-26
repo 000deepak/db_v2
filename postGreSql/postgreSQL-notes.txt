@@ -1,0 +1,192 @@
+PostgreSQL Tutorial Notes 
+http://www.postgresqltutorial.com/
+
+
+#####################
+## Brief Overview ###
+#####################
+http://www.postgresqltutorial.com/what-is-postgresql/
+
+Definition
+
+A general purpose and object-relational database management system, the most advanced open source database system.
+
+Developed at Berkeley Computer Science department
+
+Advanced features include:
+ - User-defined types (?)
+ - Table inheritance
+ - Sophisticated locking mechanism
+ - Foreign key referential integrity
+ - Views, rules, subquery
+ - Nested transactions (savepoints) (?)
+ - Multi-version concurrency (?)
+   -- First to offer this
+   -- Known as MVCC feature
+   -- Known as snapshot isolation on Oracle
+ - Asynchronous replication (?)
+
+Supports:
+ - Native Microsoft Windows Server version
+ - Tablespaces
+ - Point-in-time recovery
+
+
+Allows you to add custom functions developed using different programming languages such as C/C++, Java, etc.
+
+Designed to be extensible
+ - You can define your own data types
+ - You can define your own index types
+ - You can define your own functional language
+ - You can always develop a custom plugin to enhance any part of the system to meet your requirements such as a new optimizer
+
+###########################
+### Connect to Database ###
+###########################
+
+http://www.postgresqltutorial.com/connect-to-postgresql-database/
+
+psql shell cheat sheet
+
+  - \?  psql commands
+  - \l  list databases
+  - \dt list Tablespaces
+  - \c  [DBNAME | USER| HOST| PORT| ] connect to db
+  - \password [USERNAME] change password for user
+  - \d  list tables, views, and sequences
+  - \d [NAME] describe table, view, sequence, or index
+  - \a  toggle between unaligned and aligned output mode
+  - \f [STRING] show or set field separator for unaligned query output
+  - \H toggle HTML output mode
+  - \setenv NAME [VALUE] set or unset environment variable
+  - \! [COMMAND] execute command in shell or start interactive shell
+
+  Importing data into database from file
+
+  pg_restore -U [USERNAME] -d [DATABASE NAME] [PATH TO DATA]
+    - ex: pg_restore -U frankdelpidio -d dvdrental ~/Downloads/dvdrental/
+
+  Importing CSV data to table
+
+  \copy [table_name] FROM '/path/to/csv' DELIMITER ',' CSV HEADER;
+
+  \copy id_mappings FROM '~/Active_GitHub_Projects/draft_kings/db/csvs/dfk_pfr_mapping.csv' DELIMITER ',' CSV HEADER;
+
+
+
+##################
+### Data Types ###
+##################
+
+- Strings 
+  - use Text since it is unlimited space and doesn't need to pad zeroes making it faster
+
+- Integer
+  - Serial automatically generate and populate values, similar to auto_increment
+
+- UUID
+  - Universal Unique Identifier
+  - guarantees better uniqueness than SERIAL
+  - can be used to hide sensitive data exosed to public such as values of id in URL
+
+- Arrays
+  - can be array of strings or integers
+
+- JSON
+  - JSON plain jason that requires reprasing for each processing
+  - JSONB stores data in binary format which is faster to process but slower to insert
+  - Also supports indexing
+
+
+##################
+### Copy Data ###
+##################
+
+- Copy Database on same server(make backup?)
+
+CREATE DATABASE targetdb 
+WITH TEMPLATE sourcedb;
+
+- Depending on size of the source database it may take awhile to complete copying
+
+- I should create a test database file and build by test database everytime this way
+
+Copy Database across servers
+
+- dump the source database to a file
+
+pg_dump -U postgres -O sourcedb -f sourcedb.sql
+
+- restore the bump file on the remote server
+
+psql -U postgres -d targetdb -f sourcedb.sql
+
+
+#########################
+### Stored Procedures ###
+#########################
+http://www.postgresqltutorial.com/postgresql-stored-procedures/
+
+Advantages of using stored procedures:
+
+-- Reduce the number of round trips between application and database servers
+
+-- Increase performance because user-defined functions pre-compiled and stored in the database server
+
+-- Be able to reuse in many applications
+
+Disadvantages
+
+-- Slow in software development because it requires specialized skills that many developers do not possess
+
+-- make it difficult to manage versions and hard to debug
+
+-- may not be portable to other database management systems
+
+CREATE FUNCTION:
+- specify name
+- comma-separated list of parameters
+- specify return type
+- begin and end block
+- semicolon after end block
+- Indicate procedural language
+
+- ex:
+CREATE FUNCTION function_name(p1 type, p2 type)
+ RETURNS type AS
+BEGIN
+ -- logic
+END;
+LANGUAGE language_name;
+
+- The entire function definition that you provide to the CREATE FUNCTION must be a single quoted string
+- if the function has any single quote ('), you have to escape it
+- version 8.0 or later, PostgreSQL provides a feature called dollar quoting that allows you to choose a suitable string that does not appear in the function so that you don’t have to escape it
+
+Function Parameters
+
+Four types:
+
+  1. IN parameters
+    - Default parameter type
+    - can pass these parameters to the function but cannot get them back as part of a result
+
+  2. OUT parameters
+    - Can get the parameters back as part of the result
+    - Use OUT keyword to define out parameters
+
+  3. INOUT parameters
+    - Combination of IN and OUT parameters
+    - caller can pass the value to the function, have the function change the argument, and pass the value back as part of the result
+    - Use INOUT keyword to define INOUT params
+
+  4. PL/pgSQL VARIADIC parameters
+    - a variable number of arguments
+    - all arguments must have same datatype
+    - arguments are passed to function as an array
+
+Function that returns a table
+
+- Need to specify the columns of the table that will be returned
+
+- RETURNS TABLE (column data_type)

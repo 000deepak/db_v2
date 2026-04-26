@@ -1,0 +1,194 @@
+# 📘 Complete SQL Syllabus Guide
+
+A beginner-to-advanced SQL study guide covering key concepts, queries, joins, subqueries, constraints, and more. Ideal for interviews, academic revision, and self-paced learning.
+
+---
+
+## 📖 Chapters & Topics
+
+---
+
+### C1. Introduction to SQL
+- What is SQL
+- Data
+- Database
+- DBMS
+- RDBMS
+- Difference between DBMS and RDBMS
+- Relational Model and Table
+- E.F Codd Rules
+
+---
+
+### C2. Data Types
+- What is Data Type and its Types
+- CHAR
+- VARCHAR / VARCHAR2
+- DATE
+- NUMBER
+- BLOB / CLOB
+
+---
+
+### C3. Constraints
+- What is Constraint and its Types
+- UNIQUE
+- NOT NULL
+- CHECK
+- PRIMARY KEY – FOREIGN KEY (Part 1 & 2)
+
+---
+
+### C4. Overview of SQL Statements
+- Data Definition Language (DDL)
+- Data Manipulation Language (DML)
+- Transaction Control Language (TCL)
+- Data Control Language (DCL)
+- Data Query Language (DQL)
+
+---
+
+### C5. Oracle SQL Plus Database Installation
+
+---
+
+### C6. Data Query Language (DQL)
+- SELECT
+- PROJECTION
+- SELECTION
+- JOINS
+
+---
+
+### C7. Projection
+- SELECT Clause
+- FROM Clause
+- DISTINCT Clause
+- Expression and Alias
+
+---
+
+### C8. Selection
+- What is Selection and its Syntax
+
+---
+
+### C9. Operators
+- Concatenation Operators (`||`)
+- Logical Operators (AND, OR, NOT)
+- Special Operators:
+  - IN / NOT IN
+  - BETWEEN / NOT BETWEEN
+  - IS / IS NOT
+  - LIKE / NOT LIKE
+
+---
+
+### C10. Functions
+- What is Function and Types
+- Multi-Row Functions
+
+---
+
+### C11. GROUP BY Clause
+
+---
+
+### C12. HAVING Clause
+- Difference between WHERE and HAVING
+
+---
+
+### C13. ORDER BY Clause
+
+---
+
+### C14. Subqueries
+- What is Subquery?
+- When & Why Use Subquery?
+- Subquery Cases
+- Types of Subqueries
+- Subquery Operators (ALL, ANY)
+- Nested Subqueries
+- EMP – MGR Relationship (Case 1 & 2)
+
+---
+
+### C15. Joins
+- What is Join?
+- Types of Joins:
+  - Cartesian / Cross Join
+  - Inner / Equi Join
+  - Natural Join
+  - Outer Join
+  - Self Join
+  - Multiple Conditions on Joins
+
+---
+
+### C16. Co-Related Subquery
+- What is Co-Related Subquery?
+- EXISTS / NOT EXISTS
+- Nth Max / Min Value
+
+---
+
+### C17. Data Definition Language (DDL)
+- CREATE
+- RENAME
+- ALTER (Add/Remove/Modify Column, DataType, Constraints)
+- TRUNCATE
+- DROP
+
+---
+
+### C18. Data Manipulation Language (DML)
+- INSERT
+- UPDATE
+- DELETE
+
+---
+
+### C19. Transaction Control Language (TCL)
+- COMMIT
+- ROLLBACK
+- SAVEPOINT
+
+---
+
+### C20. Data Control Language (DCL)
+- GRANT
+- REVOKE
+
+---
+
+### C21. Single Row Functions (SRF)
+- LENGTH()
+- CONCAT()
+- MOD()
+- UPPER(), LOWER(), INITCAP()
+- REVERSE()
+- SUBSTR(), INSTR()
+- REPLACE()
+- TRUNC(), ROUND()
+- MONTHS_BETWEEN(), LAST_DAY()
+- TO_CHAR()
+- NVL()
+
+---
+
+### C22. Normalization
+- Attributes
+- Functional Dependencies and Types
+- 1NF, 2NF, 3NF, BCNF
+
+---
+
+## 🧠 How to Use
+- Use this as a reference or checklist while learning or revising SQL.
+- Great for interviews and written tests.
+- Can be used for teaching or mentoring beginners in databases.
+
+---
+
+⭐ If this helped you, don't forget to star the repo and share it with your peers!

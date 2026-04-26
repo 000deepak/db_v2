@@ -1,0 +1,93 @@
+				                  "Welcome To Ashok IT"
+                                   		    "Oracle Database"
+                                 		 Topic : Introduction To Database
+                               			   Date  : 15/11/2022
+                                                     (Session - 02)
+_____________________________________________________________________________________________________________________________
+Course Information
+******************
+Downloading Course Content  : https://ashokitech.com/uploads/course/1726243158_1667612569.pdf
+
+Course Duration : 1 Month (+/-) 10 Days
+
+Prequisite For Training : Nothing
+
+Mode of Training : Online Training
+
+Session Timings Fixed : 9PM To 10.15PM Max
+                        Monday - Saturday
+Course Fee : 4k
+
+Session-1 Recording URL : https://youtu.be/6PbFcAVMlsI 
+_____________________________________________________________________________________________________________________________
+*******************
+Database Softwares
+*******************
+    > Oracle Database      >> Oracle Corporation   >> Propertiary License
+
+    > MySQL Database       >> Oracle Corporation   >> Open Source
+
+    > DB2 Database         >> IBM Corporation
+ 
+    > SQL Server Database  >> Microsoft Corporation
+
+    > Derby Database       >> Sun MicroSystem
+  
+    > PostgreSql Database etc.,
+
+  NOTE:  
+  =====
+   ** The above all the database softwares are comes under "RDBMS Databases"
+  
+   ** In the Relational Database Management System the data will be managed in the form Relations(Tables).
+
+   ** In the Relational Database Management System always data will be in Structured Format i.e.,Tables
+
+   ** Table will contains Rows & Columns With Respective to the RDBMS  Columns >> Fields 
+                                                  
+                                                                       Rows    >> Tuples
+                               
+                                                                       Tables  >> Relations
+
+
+         Customers(Table)
+         ===============         
+         Customer_Id          Customer_Name              Customer_Location
+         ===========          ==============             ==================
+           1025                  Mahesh                    Hyderabad    >>>> Tuples
+           1026                  Suresh                    Delhi	>>>> Tuples
+           1027                  Rajesh 		   Bangalore    >>>> Tuples
+           1028                  Nagesh                    Chennai      >>>> Tuples
+           1029                  Naresh                    Pondicherry  >>>> Tuples
+
+       Fieds  >> Customer_Id,Customer_Name,Customer_Location   
+
+       Training Program  ::: Only Two RDBMS Softwares (Oracle,MySQL)
+       
+       Generally In Realworld who one Person will communicate with another Person >>  Language >> English(Communication)
+
+       If the enduser wanted to Communicate with RDBMS Database Softwares >> Language >> SQL(Structure Query Language)
+
+       Realtional Databases are also called as "SQL Databases"
+
+***************************
+Types of Database Softwares
+***************************
+    * We have two types of Database Softwares 
+
+          1) RDBMS Database Software / SQL Databases     : Oracle,MySQL,SQLServer,Postgresql,DB2,Derby etc.,
+
+          2) NRDBMS Database Software / No-SQL Databases : Data will be managed in several Formats 
+
+              - Document based Databases >> No SQL Database  >> Mongo DB >> Internally Data will be stored in JSON Format
+                {
+                  "customerId":"123",
+                  "customerName":"Mahesh"
+                }
+
+              - Key-Value Based Database >> No SQL Database >> Cassandar DB, Dynamo DB et.,
+
+              - Column Based Database    >> No SQL Database >> HBase etc.,
+
+              - Graph Database           >> No SQL Database >> Neo4J ,GraphQL etc.,
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
