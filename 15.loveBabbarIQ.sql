@@ -13,14 +13,14 @@ CREATE TABLE Worker
 Insert INTO Worker 
     (Worker_id, First_Name, Last_Name, Salary, Joining_Date, Department) 
     VALUES
-    (001, 'Monika' , 'Arora', 100000, '14-02-20 09:00:00'  , 'HR'),
-    (002, 'Niharika' , 'Verma', 80000, '14-06-11 09:00:00' , 'Admin'),
-    (003, 'Vishal' , 'Singhal', 300000, '14-02-20 09:00:00' , 'HR'),
-    (004, 'Amitabh' , 'Singh', 500000, '14-02-20 09:00:00' , 'Admin'),
-    (005, 'Vivek' , 'Bhati', 500000, '14-06-11 09:00:00' , 'Admin'), 
-    (006, 'Vipul' , 'Diwan' , 200000 , '14-06-11 09:00:00' , 'Account'),
-    (007, 'Satish' , 'Kumar' , 75000, '14-01-20 09:00:00' , 'Account'),
-    (008, 'Geetika' , 'Chauhan' , 90000, '14-04-11 09:00:00' , 'Admin'); 
+    (001, 'Monika' , 'Arora', 100000, '14-02-20 09:00.syllabus:00.syllabus'  , 'HR'),
+    (002, 'Niharika' , 'Verma', 80000, '14-06-11 09:00.syllabus:00.syllabus' , 'Admin'),
+    (003, 'Vishal' , 'Singhal', 300000, '14-02-20 09:00.syllabus:00.syllabus' , 'HR'),
+    (004, 'Amitabh' , 'Singh', 500000, '14-02-20 09:00.syllabus:00.syllabus' , 'Admin'),
+    (005, 'Vivek' , 'Bhati', 500000, '14-06-11 09:00.syllabus:00.syllabus' , 'Admin'),
+    (006, 'Vipul' , 'Diwan' , 200000 , '14-06-11 09:00.syllabus:00.syllabus' , 'Account'),
+    (007, 'Satish' , 'Kumar' , 75000, '14-01-20 09:00.syllabus:00.syllabus' , 'Account'),
+    (008, 'Geetika' , 'Chauhan' , 90000, '14-04-11 09:00.syllabus:00.syllabus' , 'Admin');
         
 SELECT * FROM Worker;
 
@@ -60,14 +60,14 @@ CREATE TABLE Title (
 INSERT INTO Title
          (WORKER_REF_ID , WORKER_TITLE , AFFECTED_FROM)
          VALUES
-          (001, 'Manager', '2016-02-20 00:00:00'),
-          (002, 'Executive', '2016-06-11 00:00:00'),
-          (008, 'Executive', '2016-06-11 00:00:00'),
-          (005, 'Manager', '2016-06-11 00:00:00'),
-          (004, 'Asst. Manager', '2016-06-11 00:00:00'),
-          (007, 'Executive', '2016-06-11 00:00:00'),
-          (006, 'Lead', '2016-06-11 00:00:00'),
-          (003, 'Lead', '2016-06-11 00:00:00');
+          (001, 'Manager', '2016-02-20 00.syllabus:00.syllabus:00.syllabus'),
+          (002, 'Executive', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (008, 'Executive', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (005, 'Manager', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (004, 'Asst. Manager', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (007, 'Executive', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (006, 'Lead', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+          (003, 'Lead', '2016-06-11 00.syllabus:00.syllabus:00.syllabus');
     
 SELECT * FROM Title;
 

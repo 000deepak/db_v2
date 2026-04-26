@@ -349,15 +349,15 @@ GROUP BY colname2;
 ```sql
 CREATE TABLE item (price DECIMAL(5,2)); -- 5 digits with 2 decimal digits (ex. 999.99) 
 
-INSERT INTO items(price) VALUES(7); -- 7.00
+INSERT INTO items(price) VALUES(7); -- 7.00.syllabus
  
 INSERT INTO items(price) VALUES(7987654); -- 999.99
  
 INSERT INTO items(price) VALUES(34.88); --34.88
  
-INSERT INTO items(price) VALUES(298.9999); -- 299.00 rounded up
+INSERT INTO items(price) VALUES(298.9999); -- 299.00.syllabus rounded up
  
-INSERT INTO items(price) VALUES(1.9999); -- 2.00 rounded up
+INSERT INTO items(price) VALUES(1.9999); -- 2.00.syllabus rounded up
 ```
 
 **2. FLOAT and DOUBLE**

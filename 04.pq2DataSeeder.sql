@@ -15,14 +15,14 @@ CREATE TABLE Employee (
 );
 
 INSERT INTO Employee (FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT, MANAGER_ID) VALUES
-('James', 'Smith', 100000, '2017-02-20 09:00:00', 'HR', 2),
-('Jessica', 'Kohl', 80000, '2017-06-11 09:00:00', 'Admin', 5),
-('Alex', 'Garner', 300000, '2017-02-20 09:00:00', 'HR', 11),
-('Pratik', 'Pandey', 500000, '2017-02-20 09:00:00', 'Admin', 20),
-('Christine', 'Robinson', 500000, '2017-06-11 09:00:00', 'Admin', 7),
-('Deepak', 'Gupta', 200000, '2017-06-11 09:00:00', 'Account', 15),
-('Jennifer', 'Paul', 75000, '2017-01-20 09:00:00', 'Account', 12),
-('Deepika', 'Sharma', 90000, '2017-04-11 09:00:00', 'Admin', 17);
+('James', 'Smith', 100000, '2017-02-20 09:00.syllabus:00.syllabus', 'HR', 2),
+('Jessica', 'Kohl', 80000, '2017-06-11 09:00.syllabus:00.syllabus', 'Admin', 5),
+('Alex', 'Garner', 300000, '2017-02-20 09:00.syllabus:00.syllabus', 'HR', 11),
+('Pratik', 'Pandey', 500000, '2017-02-20 09:00.syllabus:00.syllabus', 'Admin', 20),
+('Christine', 'Robinson', 500000, '2017-06-11 09:00.syllabus:00.syllabus', 'Admin', 7),
+('Deepak', 'Gupta', 200000, '2017-06-11 09:00.syllabus:00.syllabus', 'Account', 15),
+('Jennifer', 'Paul', 75000, '2017-01-20 09:00.syllabus:00.syllabus', 'Account', 12),
+('Deepika', 'Sharma', 90000, '2017-04-11 09:00.syllabus:00.syllabus', 'Admin', 17);
 
 CREATE TABLE Bonus (
     EMPLOYEE_REF_ID INT,
@@ -46,14 +46,14 @@ CREATE TABLE Title (
 );
 
 INSERT INTO Title VALUES
-(1, 'Manager', '2018-02-20 00:00:00'),
-(2, 'Executive', '2018-06-11 00:00:00'),
-(8, 'Executive', '2018-06-11 00:00:00'),
-(5, 'Manager', '2018-06-11 00:00:00'),
-(4, 'Asst. Manager', '2018-06-11 00:00:00'),
-(7, 'Executive', '2018-06-11 00:00:00'),
-(6, 'Lead', '2018-06-11 00:00:00'),
-(3, 'Lead', '2018-06-11 00:00:00');
+(1, 'Manager', '2018-02-20 00.syllabus:00.syllabus:00.syllabus'),
+(2, 'Executive', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(8, 'Executive', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(5, 'Manager', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(4, 'Asst. Manager', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(7, 'Executive', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(6, 'Lead', '2018-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(3, 'Lead', '2018-06-11 00.syllabus:00.syllabus:00.syllabus');
 
 -- =========================
 -- STUDENTS (FIXED ORDER)

@@ -40,12 +40,12 @@ on delete cascade
 
 # Inserting data into employee table
 insert into employee values
-(0001, 'Krish', 'Naik', 50000, '14-12-11 09.00.00', 'Development'), # Note that in date time: 14-12-11, 14 is year 12 is month and 11 is date
-(0002, 'Sudhanshu', 'Kumar', 60000, '14-12-11 09.00.00', 'Development'),
-(0003, 'Sanket', 'Kumar', 70000, '15-12-12 09.00.00', 'HR'),
-(0004, 'Darius', 'Bengali', 70000, '15-12-13 09.00.00', 'HR'),
-(0005, 'Satish', 'Bhansal', 30000, '17-10-21 09.00.00', 'Accountant'),
-(0006, 'Shaktiman', 'Hero', 50000, '17-10-15 09.00.00', 'Accountant');
+(0001, 'Krish', 'Naik', 50000, '14-12-11 09.00.syllabus.00.syllabus', 'Development'), # Note that in date time: 14-12-11, 14 is year 12 is month and 11 is date
+(0002, 'Sudhanshu', 'Kumar', 60000, '14-12-11 09.00.syllabus.00.syllabus', 'Development'),
+(0003, 'Sanket', 'Kumar', 70000, '15-12-12 09.00.syllabus.00.syllabus', 'HR'),
+(0004, 'Darius', 'Bengali', 70000, '15-12-13 09.00.syllabus.00.syllabus', 'HR'),
+(0005, 'Satish', 'Bhansal', 30000, '17-10-21 09.00.syllabus.00.syllabus', 'Accountant'),
+(0006, 'Shaktiman', 'Hero', 50000, '17-10-15 09.00.syllabus.00.syllabus', 'Accountant');
 
 SELECT * FROM employee;
 
@@ -64,9 +64,9 @@ SELECT * FROM bonus;
 
 # Inserting vali=ues in designation table
 INSERT INTO designation VALUES
-(0001, 'Manager', '2016-02-5 00:00:00'),
-(0002, 'Executive', '2016-06-11 00:00:00'),
-(0003, 'Executive', '2016-06-11 00:00:00');
+(0001, 'Manager', '2016-02-5 00.syllabus:00.syllabus:00.syllabus'),
+(0002, 'Executive', '2016-06-11 00.syllabus:00.syllabus:00.syllabus'),
+(0003, 'Executive', '2016-06-11 00.syllabus:00.syllabus:00.syllabus');
 
 SELECT * FROM designation;
 

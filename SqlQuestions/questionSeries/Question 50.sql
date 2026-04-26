@@ -11,10 +11,10 @@ that only made one or multiple purchases on the first day do not count, nor do w
 𝐒𝐜𝐡𝐞𝐦𝐚 𝐚𝐧𝐝 𝐃𝐚𝐭𝐚𝐬𝐞𝐭
 CREATE TABLE in_app_purchases ( created_at DATETIME, price BIGINT, product_id BIGINT, quantity BIGINT, user_id BIGINT);
 
-INSERT INTO in_app_purchases (created_at, price, product_id, quantity, user_id) VALUES('2024-12-01 10:00:00', 500, 101, 1, 1), 
- ('2024-12-02 11:00:00', 700, 102, 1, 1),('2024-12-01 12:00:00', 300, 103, 1, 2), ('2024-12-03 14:00:00', 400, 103, 1, 2),
- ('2024-12-02 09:30:00', 200, 104, 1, 3), ('2024-12-04 15:30:00', 600, 105, 2, 3),
-('2024-12-01 08:00:00', 800, 106, 1, 4), ('2024-12-05 18:00:00', 500, 107, 1, 4),('2024-12-06 16:00:00', 700, 108, 1, 5); 
+INSERT INTO in_app_purchases (created_at, price, product_id, quantity, user_id) VALUES('2024-12-01 10:00.syllabus:00.syllabus', 500, 101, 1, 1),
+ ('2024-12-02 11:00.syllabus:00.syllabus', 700, 102, 1, 1),('2024-12-01 12:00.syllabus:00.syllabus', 300, 103, 1, 2), ('2024-12-03 14:00.syllabus:00.syllabus', 400, 103, 1, 2),
+ ('2024-12-02 09:30:00.syllabus', 200, 104, 1, 3), ('2024-12-04 15:30:00.syllabus', 600, 105, 2, 3),
+('2024-12-01 08:00.syllabus:00.syllabus', 800, 106, 1, 4), ('2024-12-05 18:00.syllabus:00.syllabus', 500, 107, 1, 4),('2024-12-06 16:00.syllabus:00.syllabus', 700, 108, 1, 5);
 
 INPUT:
 
