@@ -24,6 +24,16 @@ WHERE salary = (
     LIMIT 1 OFFSET 4
 );
 
+-- first 5 highest salaries
+SELECT *
+FROM employee
+WHERE salary IN (
+    SELECT DISTINCT salary
+    FROM employee
+    ORDER BY salary DESC
+    LIMIT 5
+);
+
 -- =========================================
 -- STEP 3: NTH HIGHEST SALARY (SUBQUERY METHOD)
 -- =========================================
