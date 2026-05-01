@@ -1,0 +1,37 @@
+> Problem 36: Sharding Strategies- Question: You decided to shard. How do you choose which shard to send data to?
+  - The sharding key determines data distribution — choosing wrong can cause hotspots.
+- Hash-Based Sharding
+  - Hash the sharding key (user_id, order_id) to determine shard.
+  - Example: hash(user_id) % 10 → user 12345 always goes to shard 5.
+  - Consistent hashing
+  - Even distribution
+  - Redis Cluster
+- Range-Based Sharding
+  - Split data by value ranges of the sharding key.
+  - Example: Users A-M → Shard 1, Users N-Z → Shard 2.
+  - Sorted data
+  - Range queries
+  - MongoDB range sharding
+- Geographic Sharding
+  - Shard by location to reduce latency and comply with data residency laws.
+  - Example: US users → US shard, EU users → EU shard (GDPR compliance).
+  - Multi-region
+  - Data sovereignty
+  - Latency optimization
+- Directory-Based Sharding
+  - Maintain lookup table mapping each key to its shard.
+  - Example: user_id 123 → Shard 2, user_id 456 → Shard 5.
+  - Flexible
+  - Lookup overhead
+  - Shard rebalancing
+- Entity Group Sharding
+  - Co-locate related data on same shard for transaction support.
+  - Example: User and their orders on same shard → local transactions instead of distributed.
+  - Data locality
+  - Transaction support
+  - Google Spanner
+- Composite Sharding Key
+  - Use multiple columns for sharding to improve distribution.
+  - Example: Shard by (tenant_id, created_date) → evenly distribute multi-tenant data.
+  - Multi-tenancy
+  - Time-series data
