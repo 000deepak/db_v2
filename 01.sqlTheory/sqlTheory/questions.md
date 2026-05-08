@@ -107,26 +107,6 @@
 - **SET TRANSACTION**: Sets the name of the transaction.
 - **SAVEPOINT**: Sets a point where the transaction can be rolled back.
 
-## SQL Commands and Queries
-
-### How to select employees whose names start with 'A'?
-- SELECT * FROM table_name WHERE EmpName LIKE 'A%';
-
-### How to fetch common records from two tables?
-- SELECT studentID FROM student INTERSECT SELECT studentID FROM Exam;
-
-### How to fetch alternate records from a table?
-- SELECT studentID FROM (SELECT ROW_NUMBER() OVER (ORDER BY studentID) AS rowno, studentID FROM student) WHERE MOD(rowno, 2) = 0;
-
-### How to select unique records from a table?
-- SELECT DISTINCT StudentID, StudentName FROM Student;
-
-### How to fetch the first 5 characters of a string?
-- SELECT SUBSTRING(StudentName, 1, 5) AS studentname FROM student;
-
-### How to find the second highest salary?
-- SELECT DISTINCT(salary) FROM employee ORDER BY salary DESC LIMIT 1, 1;
-
 ### Which operator is used for pattern matching in a query?
 - **LIKE** operator.
 - SELECT * FROM Student WHERE studentname LIKE 'a%';
