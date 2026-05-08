@@ -1,4 +1,4 @@
-use afreenq;
+--> ref use afreenq git repo;
 select * from employee;
 -- 1. Write a SQL query to find the nth highest salary from employee table.
 -- 2. Write a SQL query to find top n records?
