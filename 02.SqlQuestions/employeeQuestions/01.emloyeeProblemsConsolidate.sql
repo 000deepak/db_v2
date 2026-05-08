@@ -23,9 +23,6 @@ from empm as e
 where e.salary>m.salary;
 
 -- How to get employee details who are also Manager
-select distinct emp_id, emp_name from emp_manager 
-where emp_id in ( select distinct manager_id from emp_manager ) ;
-
 select distinct a.emp_id, a.emp_name from emp_manager a 
 inner join emp_manager b
 on a.emp_id=b.manager_id
