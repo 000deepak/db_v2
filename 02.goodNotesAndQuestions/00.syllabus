@@ -1,12 +1,3 @@
-# 📘 Complete SQL Syllabus Guide
-
-A beginner-to-advanced SQL study guide covering key concepts, queries, joins, subqueries, constraints, and more. Ideal for interviews, academic revision, and self-paced learning.
-
----
-
-## 📖 Chapters & Topics
-
----
 
 ### C1. Introduction to SQL
 - What is SQL
@@ -18,7 +9,6 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - Relational Model and Table
 - E.F Codd Rules
 
----
 
 ### C2. Data Types
 - What is Data Type and its Types
@@ -28,7 +18,6 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - NUMBER
 - BLOB / CLOB
 
----
 
 ### C3. Constraints
 - What is Constraint and its Types
@@ -37,7 +26,6 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - CHECK
 - PRIMARY KEY – FOREIGN KEY (Part 1 & 2)
 
----
 
 ### C4. Overview of SQL Statements
 - Data Definition Language (DDL)
@@ -46,11 +34,9 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - Data Control Language (DCL)
 - Data Query Language (DQL)
 
----
 
 ### C5. Oracle SQL Plus Database Installation
 
----
 
 ### C6. Data Query Language (DQL)
 - SELECT
@@ -58,7 +44,6 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - SELECTION
 - JOINS
 
----
 
 ### C7. Projection
 - SELECT Clause
@@ -66,12 +51,10 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - DISTINCT Clause
 - Expression and Alias
 
----
 
 ### C8. Selection
 - What is Selection and its Syntax
 
----
 
 ### C9. Operators
 - Concatenation Operators (`||`)
@@ -82,26 +65,21 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
   - IS / IS NOT
   - LIKE / NOT LIKE
 
----
 
 ### C10. Functions
 - What is Function and Types
 - Multi-Row Functions
 
----
 
 ### C11. GROUP BY Clause
 
----
 
 ### C12. HAVING Clause
 - Difference between WHERE and HAVING
 
----
 
 ### C13. ORDER BY Clause
 
----
 
 ### C14. Subqueries
 - What is Subquery?
@@ -112,7 +90,6 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - Nested Subqueries
 - EMP – MGR Relationship (Case 1 & 2)
 
----
 
 ### C15. Joins
 - What is Join?
@@ -124,14 +101,12 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
   - Self Join
   - Multiple Conditions on Joins
 
----
 
 ### C16. Co-Related Subquery
 - What is Co-Related Subquery?
 - EXISTS / NOT EXISTS
 - Nth Max / Min Value
 
----
 
 ### C17. Data Definition Language (DDL)
 - CREATE
@@ -140,27 +115,23 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - TRUNCATE
 - DROP
 
----
 
 ### C18. Data Manipulation Language (DML)
 - INSERT
 - UPDATE
 - DELETE
 
----
 
 ### C19. Transaction Control Language (TCL)
 - COMMIT
 - ROLLBACK
 - SAVEPOINT
 
----
 
 ### C20. Data Control Language (DCL)
 - GRANT
 - REVOKE
 
----
 
 ### C21. Single Row Functions (SRF)
 - LENGTH()
@@ -175,20 +146,8 @@ A beginner-to-advanced SQL study guide covering key concepts, queries, joins, su
 - TO_CHAR()
 - NVL()
 
----
 
 ### C22. Normalization
 - Attributes
 - Functional Dependencies and Types
 - 1NF, 2NF, 3NF, BCNF
-
----
-
-## 🧠 How to Use
-- Use this as a reference or checklist while learning or revising SQL.
-- Great for interviews and written tests.
-- Can be used for teaching or mentoring beginners in databases.
-
----
-
-⭐ If this helped you, don't forget to star the repo and share it with your peers!
