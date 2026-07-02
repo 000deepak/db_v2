@@ -1,31 +1,31 @@
 # MongoDB Commands
 
-### Show All Databases
+#### Show All Databases
 ```js
 show dbs
 ```
 
-### Show Current Database
+#### Show Current Database
 ```js
 db
 ```
 
-### Create Or Switch Database
+#### Create Or Switch Database
 ```js
 use acme
 ```
 
-### Drop
+#### Drop
 ```js
 db.dropDatabase()
 ```
 
-### Create Collection
+#### Create Collection
 ```js
 db.createCollection('posts')
 ```
 
-### Show Collections
+#### Show Collections
 ```js
 show collections
 ```
@@ -45,7 +45,7 @@ db.collection.insertMany(documents, options)
 documents: An array of documents to insert into the collection.
 options: Optional parameters like writeConcern.
 ```
-### **Explanation of Write Concern in MongoDB vs. SQL Transactions**
+#### **Explanation of Write Concern in MongoDB vs. SQL Transactions**
 - **MongoDB `writeConcern`**: Determines how many nodes must acknowledge the write before it's considered successful. Example:  
   - `{ w: 0 }` → No acknowledgment  
   - `{ w: 1 }` → Acknowledged by the primary node  
@@ -53,7 +53,7 @@ options: Optional parameters like writeConcern.
 - **SQL Transaction Control (`COMMIT`, `ROLLBACK`)**: Ensures that data is written safely in relational databases, offering durability and rollback mechanisms.
 
 
-### Insert Row
+#### Insert Row
 ```js
 db.posts.insert({
   title: 'Post One',
@@ -68,7 +68,7 @@ db.posts.insert({
 })
 ```
 
-### Insert Multiple Rows
+#### Insert Multiple Rows
 
 ```js
 db.posts.insertMany([
@@ -103,56 +103,56 @@ db.posts.insertMany([
 	- find() method with Projection
 	- find() on Nested Data
 
-### Get All Rows
+#### Get All Rows
 ```js
 db.posts.find()
 ```
 
-### Get All Rows Formatted
+#### Get All Rows Formatted
 ```js
 db.find().pretty()
 ```
 
-### Filter
+#### Filter
 ```js
 db.posts.find({ category: 'News' })
 ```
 
-### Sort Rows
+#### Sort Rows
 ```js
 db.posts.find().sort({ title: 1 }).pretty() //asc
 db.posts.find().sort({ title: -1 }).pretty()//desc
 ```
 
-### Count Rows
+#### Count Rows
 ```js
 db.posts.find().count()
 db.posts.find({ category: 'news' }).count()
 ```
 
-### Limit Rows
+#### Limit Rows
 ```js
 db.posts.find().limit(2).pretty()
 ```
 
-### Chaining
+#### Chaining
 ```js
 db.posts.find().limit(2).sort({ title: 1 }).pretty()
 ```
 
-### Foreach
+#### Foreach
 ```js
 db.posts.find().forEach(function(doc) {
   print("Blog Post: " + doc.title)
 })
 ```
 
-### Find One Row
+#### Find One Row
 ```js
 db.posts.findOne({ category: 'News' })
 ```
 
-### Projection : select specific fields from document(like selecting sepecific columns from table)
+#### Projection : select specific fields from document(like selecting sepecific columns from table)
 ```js
 db.posts.find({ title: 'Post One' }, {
   title: 1,
@@ -359,7 +359,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-### Update Specific Field
+#### Update Specific Field
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -371,7 +371,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-### Increment Field (\$inc)
+#### Increment Field (\$inc)
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -382,7 +382,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-### Rename Field
+#### Rename Field
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -393,13 +393,13 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-### Delete Row
+#### Delete Row
 
 ```js
 db.posts.remove({ title: 'Post Four' })
 ```
 
-### Sub-Documents
+#### Sub-Documents
 
 ```js
 db.posts.update({ title: 'Post One' },
@@ -421,7 +421,7 @@ db.posts.update({ title: 'Post One' },
 })
 ```
 
-### Find By Element in Array (\$elemMatch)
+#### Find By Element in Array (\$elemMatch)
 
 ```js
 db.posts.find({
@@ -434,13 +434,13 @@ db.posts.find({
 )
 ```
 
-### Add Index
+#### Add Index
 
 ```js
 db.posts.createIndex({ title: 'text' })
 ```
 
-### Text Search
+#### Text Search
 
 ```js
 db.posts.find({
@@ -450,7 +450,7 @@ db.posts.find({
 })
 ```
 
-### Greater & Less Than
+#### Greater & Less Than
 
 ```js
 db.posts.find({ views: { $gt: 2 } })
@@ -459,7 +459,7 @@ db.posts.find({ views: { $lt: 7 } })
 db.posts.find({ views: { $lte: 7 } })
 ```
 
-### List of the indexes in a collection
+#### List of the indexes in a collection
 
 ```js
 db.restaurants.getIndexes()
@@ -483,14 +483,14 @@ db.restaurants.getIndexes()
 ]
 ```
 
-### Drop an existing index
+#### Drop an existing index
 
 ```js
 db.restaurants.dropIndex("cuisine_1_grades.score_1")
 { "nIndexesWas" : 4, "ok" : 1 }
 ```
 
-### CreateView
+#### CreateView
 Syntax
 ```js
 db.createView(<view>, <source>, <pipeline>, <options>)
