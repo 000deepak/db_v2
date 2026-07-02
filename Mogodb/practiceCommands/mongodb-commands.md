@@ -159,6 +159,27 @@ db.posts.find({ title: 'Post One' }, {
 })
 ```
 
+### AND, OR and IN Conditions
+- `AND` Condition: 
+  - By default, MongoDB combines multiple query conditions with an AND operation.
+```js
+db.users.find({ "age": { $gt: 25 }, "status": "active" })
+//This finds users whose age is greater than 25 and status is "active".
+```
+- `OR` Condition: 
+	- Uses the $or operator to specify multiple conditions, at least one of which must be true.
+```js
+db.users.find({ $or: [{ "age": { $lt: 18 } }, { "status": "inactive" }] })
+//This finds users who are either younger than 18 or have an inactive status.
+```
+- `IN` Condition: 
+	- Uses the $in operator to specify an array of possible values.
+```js
+db.users.find({ "status": { $in: ["active", "pending"] } })
+//This finds users whose status is either "active" or "pending".
+```
+
+
 ## `find()` on Nested Data
 #### 1. Querying Embedded Documents (Objects)
 
