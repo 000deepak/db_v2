@@ -29,7 +29,7 @@ db.createCollection('posts')
 ```js
 show collections
 ```
----
+
 ## Insert
 - Insert a Single Document: insertOne()
   - The insertOne() method inserts a single document into the collection.
@@ -186,7 +186,7 @@ db.posts.find({ title: 'Post One' }, {
 * Query by array index (`"skills.0"`)
 * `$slice` (return part of an array)
   
----
+
 
 ```javascript
 //sample document
@@ -334,7 +334,7 @@ db.users.find({
 ```
 
 | Query                                 | Purpose                              |
-| ------------------------------------- | ------------------------------------ |
+| - |  |
 | `{ "address.city": "Boston" }`        | Find nested object field             |
 | `{ skills: "Java" }`                  | Array contains value                 |
 | `{ skills: { $all: [...] } }`         | Array contains all values            |
