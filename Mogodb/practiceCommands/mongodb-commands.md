@@ -353,16 +353,16 @@ db.users.find({
 })
 ```
 
-| Query                                 | Purpose                              |
+| Query                                 | Purpose                              | Used For |
 | - |  - |
-| `{ "address.city": "Boston" }`        | Find nested object field             |
-| `{ skills: "Java" }`                  | Array contains value                 |
-| `{ skills: { $all: [...] } }`         | Array contains all values            |
-| `{ skills: { $in: [...] } }`          | Array contains any value             |
-| `{ skills: { $size: 3 } }`            | Array has fixed size                 |
-| `{ "projects.name": "Banking" }`      | Search inside array of objects       |
-| `{ projects: { $elemMatch: {...} } }` | Same object satisfies all conditions |
-| `{ phone: { $exists: true } }`        | Check if field exists                |
+| `{ "address.city": "Boston" }`        | Find nested object field             | Embedded Document|
+| `{ skills: "Java" }`                  | Array contains value                 | Array |
+| `{ skills: { $all: [...] } }`         | Array contains all values            | Array |
+| `{ skills: { $in: [...] } }`          | Array contains any value             | Array |
+| `{ skills: { $size: 3 } }`            | Array has fixed size                 | Array |
+| `{ "projects.name": "Banking" }`      | Search inside array of objects       | Array of Embedded Documents |
+| `{ projects: { $elemMatch: {...} } }` | Same object satisfies all conditions | Array of Embedded Documents |
+| `{ phone: { $exists: true } }`        | Check if field exists                | Simple Object |
 
 
 # Update Row
