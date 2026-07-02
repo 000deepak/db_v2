@@ -98,7 +98,7 @@ db.posts.insertMany([
  	- findOne()
   	- forEach()  
 	- limit, skip, sort and count
-	- AND, OR and IN Conditions
+	- AND, OR, IN and NOTIN Conditions
 	- find() method with Projection
 	- find() on Nested Data
 
