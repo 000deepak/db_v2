@@ -69,7 +69,6 @@ db.posts.insert({
 ```
 
 #### Insert Multiple Rows
-
 ```js
 db.posts.insertMany([
   {
@@ -160,7 +159,7 @@ db.posts.find({ title: 'Post One' }, {
 })
 ```
 
-# `find()` on Nested Data
+## `find()` on Nested Data
 ### 1. Querying Embedded Documents (Objects)
 
 * Dot notation (`"address.city"`)
