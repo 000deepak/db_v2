@@ -354,7 +354,7 @@ db.users.find({
 ```
 
 | Query                                 | Purpose                              |
-| - |  |
+| - |  - |
 | `{ "address.city": "Boston" }`        | Find nested object field             |
 | `{ skills: "Java" }`                  | Array contains value                 |
 | `{ skills: { $all: [...] } }`         | Array contains all values            |
