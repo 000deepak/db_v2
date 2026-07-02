@@ -1,43 +1,59 @@
 # MongoDB Commands
 
 ### Show All Databases
-
 ```js
 show dbs
 ```
 
 ### Show Current Database
-
 ```js
 db
 ```
 
 ### Create Or Switch Database
-
 ```js
 use acme
 ```
 
 ### Drop
-
 ```js
 db.dropDatabase()
 ```
 
 ### Create Collection
-
 ```js
 db.createCollection('posts')
 ```
 
 ### Show Collections
-
 ```js
 show collections
 ```
+---
+## Insert
+- Insert a Single Document: insertOne()
+  - The insertOne() method inserts a single document into the collection.
+  - This inserts a new document into the users collection with the specified fields.
+```js
+db.collection.insertOne(document, options)
+document: The document to insert into the collection.
+options: Optional parameters like writeConcern.
+```
+- Insert Multiple Documents: insertMany()
+```js
+db.collection.insertMany(documents, options)
+documents: An array of documents to insert into the collection.
+options: Optional parameters like writeConcern.
+```
+### **Explanation of Write Concern in MongoDB vs. SQL Transactions**
+- **MongoDB `writeConcern`**: Determines how many nodes must acknowledge the write before it's considered successful. Example:  
+  - `{ w: 0 }` → No acknowledgment  
+  - `{ w: 1 }` → Acknowledged by the primary node  
+  - `{ w: "majority" }` → Acknowledged by most nodes in a replica set  
+- **SQL Transaction Control (`COMMIT`, `ROLLBACK`)**: Ensures that data is written safely in relational databases, offering durability and rollback mechanisms.
+
 
 ### Insert Row
-
 ```js
 db.posts.insert({
   title: 'Post One',
