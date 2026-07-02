@@ -1,36 +1,36 @@
 # MongoDB Commands
 
-#### Show All Databases
+###### Show All Databases
 ```js
 show dbs
 ```
 
-#### Show Current Database
+###### Show Current Database
 ```js
 db
 ```
 
-#### Create Or Switch Database
+###### Create Or Switch Database
 ```js
 use acme
 ```
 
-#### Drop
+###### Drop
 ```js
 db.dropDatabase()
 ```
 
-#### Create Collection
+###### Create Collection
 ```js
 db.createCollection('posts')
 ```
 
-#### Show Collections
+###### Show Collections
 ```js
 show collections
 ```
 
-## Insert
+### Insert
 - Insert a Single Document: insertOne()
   - The insertOne() method inserts a single document into the collection.
   - This inserts a new document into the users collection with the specified fields.
@@ -45,7 +45,7 @@ db.collection.insertMany(documents, options)
 documents: An array of documents to insert into the collection.
 options: Optional parameters like writeConcern.
 ```
-#### **Explanation of Write Concern in MongoDB vs. SQL Transactions**
+###### **Explanation of Write Concern in MongoDB vs. SQL Transactions**
 - **MongoDB `writeConcern`**: Determines how many nodes must acknowledge the write before it's considered successful. Example:  
   - `{ w: 0 }` → No acknowledgment  
   - `{ w: 1 }` → Acknowledged by the primary node  
@@ -53,7 +53,7 @@ options: Optional parameters like writeConcern.
 - **SQL Transaction Control (`COMMIT`, `ROLLBACK`)**: Ensures that data is written safely in relational databases, offering durability and rollback mechanisms.
 
 
-#### Insert Row
+###### Insert Row
 ```js
 db.posts.insert({
   title: 'Post One',
@@ -68,7 +68,7 @@ db.posts.insert({
 })
 ```
 
-#### Insert Multiple Rows
+###### Insert Multiple Rows
 
 ```js
 db.posts.insertMany([
@@ -93,7 +93,7 @@ db.posts.insertMany([
 ])
 ```
 
-## Read
+### Read
 - syllabus
 	- simple filter
  	- findOne()
@@ -103,56 +103,56 @@ db.posts.insertMany([
 	- find() method with Projection
 	- find() on Nested Data
 
-#### Get All Rows
+###### Get All Rows
 ```js
 db.posts.find()
 ```
 
-#### Get All Rows Formatted
+###### Get All Rows Formatted
 ```js
 db.find().pretty()
 ```
 
-#### Filter
+###### Filter
 ```js
 db.posts.find({ category: 'News' })
 ```
 
-#### Sort Rows
+###### Sort Rows
 ```js
 db.posts.find().sort({ title: 1 }).pretty() //asc
 db.posts.find().sort({ title: -1 }).pretty()//desc
 ```
 
-#### Count Rows
+###### Count Rows
 ```js
 db.posts.find().count()
 db.posts.find({ category: 'news' }).count()
 ```
 
-#### Limit Rows
+###### Limit Rows
 ```js
 db.posts.find().limit(2).pretty()
 ```
 
-#### Chaining
+###### Chaining
 ```js
 db.posts.find().limit(2).sort({ title: 1 }).pretty()
 ```
 
-#### Foreach
+###### Foreach
 ```js
 db.posts.find().forEach(function(doc) {
   print("Blog Post: " + doc.title)
 })
 ```
 
-#### Find One Row
+###### Find One Row
 ```js
 db.posts.findOne({ category: 'News' })
 ```
 
-#### Projection : select specific fields from document(like selecting sepecific columns from table)
+###### Projection : select specific fields from document(like selecting sepecific columns from table)
 ```js
 db.posts.find({ title: 'Post One' }, {
   title: 1,
@@ -161,28 +161,28 @@ db.posts.find({ title: 'Post One' }, {
 ```
 
 # `find()` on Nested Data
-## 1. Querying Embedded Documents (Objects)
+### 1. Querying Embedded Documents (Objects)
 
 * Dot notation (`"address.city"`)
 * Match entire embedded document
 
-## 2. Querying Arrays
+### 2. Querying Arrays
 * Find array contains a value
 * `$all`
 * `$in`
 * `$nin`
 * `$size`
 
-## 3. Querying Arrays of Embedded Documents
+### 3. Querying Arrays of Embedded Documents
 * Dot notation (`"projects.name"`)
 * `$elemMatch`
 * Dot notation vs `$elemMatch`
 
-## 4. Field Existence & Type Queries
+### 4. Field Existence & Type Queries
 * `$exists`
 * `$type`
 
-## 5. Array Index & Projection
+### 5. Array Index & Projection
 * Query by array index (`"skills.0"`)
 * `$slice` (return part of an array)
   
@@ -207,7 +207,7 @@ db.posts.find({ title: 'Post One' }, {
 }
 ```
 
-## 1. Querying Objects (Embedded Documents)
+### 1. Querying Objects (Embedded Documents)
 1. Use **dot notation** to access fields inside an object.
 ```javascript
 db.users.find({ "address.city": "Boston" })
@@ -228,7 +228,7 @@ db.users.find({
 //This matches only if the whole object is exactly the same.
 ```
 
-## 2. Querying Arrays
+### 2. Querying Arrays
 - MongoDB automatically checks whether an array contains a value.
 ```javascript
 db.users.find({ skills: "Java" })
@@ -237,7 +237,7 @@ db.users.find({ skills: "Java" })
 skills: ["Java", "Spring", "MongoDB"]
 ```
 
-## 3. Array Operators
+### 3. Array Operators
 - `$all`
 - Matches if an array contains **all** specified values.
 ```javascript
@@ -267,7 +267,7 @@ db.users.find({
     }
 })
 ```
-## 4. Arrays of Objects/Embedded Documents
+### 4. Arrays of Objects/Embedded Documents
 ```javascript
 projects: [
     { name: "Ecommerce", duration: 12 },
@@ -281,7 +281,7 @@ db.users.find({
 })
 ```
 
-## 5. `$elemMatch`
+### 5. `$elemMatch`
 Used when **multiple conditions must match the same object** inside an array.
 ```javascript
 db.users.find({
@@ -295,7 +295,7 @@ db.users.find({
 //Finds an object where both conditions are true.
 ```
 
-## Dot Notation vs `$elemMatch`
+### Dot Notation vs `$elemMatch`
 Without `$elemMatch`
 ```javascript
 db.users.find({
@@ -325,7 +325,7 @@ db.users.find({
 * **`$elemMatch`** ensures all conditions match the **same array element**.
 ```
 
-## 6. `$exists`
+### 6. `$exists`
 Checks whether a field exists.
 ```javascript
 db.users.find({
@@ -359,7 +359,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-#### Update Specific Field
+###### Update Specific Field
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -371,7 +371,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-#### Increment Field (\$inc)
+###### Increment Field (\$inc)
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -382,7 +382,7 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-#### Rename Field
+###### Rename Field
 
 ```js
 db.posts.update({ title: 'Post Two' },
@@ -393,13 +393,13 @@ db.posts.update({ title: 'Post Two' },
 })
 ```
 
-#### Delete Row
+###### Delete Row
 
 ```js
 db.posts.remove({ title: 'Post Four' })
 ```
 
-#### Sub-Documents
+###### Sub-Documents
 
 ```js
 db.posts.update({ title: 'Post One' },
@@ -421,7 +421,7 @@ db.posts.update({ title: 'Post One' },
 })
 ```
 
-#### Find By Element in Array (\$elemMatch)
+###### Find By Element in Array (\$elemMatch)
 
 ```js
 db.posts.find({
@@ -434,13 +434,13 @@ db.posts.find({
 )
 ```
 
-#### Add Index
+###### Add Index
 
 ```js
 db.posts.createIndex({ title: 'text' })
 ```
 
-#### Text Search
+###### Text Search
 
 ```js
 db.posts.find({
@@ -450,7 +450,7 @@ db.posts.find({
 })
 ```
 
-#### Greater & Less Than
+###### Greater & Less Than
 
 ```js
 db.posts.find({ views: { $gt: 2 } })
@@ -459,7 +459,7 @@ db.posts.find({ views: { $lt: 7 } })
 db.posts.find({ views: { $lte: 7 } })
 ```
 
-#### List of the indexes in a collection
+###### List of the indexes in a collection
 
 ```js
 db.restaurants.getIndexes()
@@ -483,14 +483,14 @@ db.restaurants.getIndexes()
 ]
 ```
 
-#### Drop an existing index
+###### Drop an existing index
 
 ```js
 db.restaurants.dropIndex("cuisine_1_grades.score_1")
 { "nIndexesWas" : 4, "ok" : 1 }
 ```
 
-#### CreateView
+###### CreateView
 Syntax
 ```js
 db.createView(<view>, <source>, <pipeline>, <options>)
