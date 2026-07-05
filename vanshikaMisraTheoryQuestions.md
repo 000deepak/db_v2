@@ -632,11 +632,6 @@ EXPLAIN FORMAT=JSON SELECT * FROM users WHERE email='abc@xyz.com';
 - Use `IS NULL` or `IS NOT NULL` in WHERE clauses
 
 
-
-Here are **questions 51 to 100** extracted from the `MySQL_Theory_Interview_Questions.pdf`, including answers and relevant data from diagrams and tables.
-
-
-
 ### 51. Describe the types of joins
 
 **Answer (table from PDF):**
@@ -1195,14 +1190,6 @@ A technique that restores the database to a specific moment, not just to the las
 **Best practice:** Index only columns used frequently in filtering, joining, or sorting.
 
 
-
-Let me know if you want **questions 101–108** (remaining from the PDF) or if you'd like the complete set saved to a file.
-
-
-Here are **questions 101 to 108** (the remaining questions) extracted from the `MySQL_Theory_Interview_Questions.pdf`, including answers and relevant details.
-
-
-
 ### 101. Can you update data through a view? When allowed/not allowed?
 
 **Answer:**
@@ -1234,10 +1221,6 @@ Here are **questions 101 to 108** (the remaining questions) extracted from the `
 - Put the most selective column first in a composite index
 - Regularly monitor usage using index statistics and execution plans
 - Remove unused, overlapping, or redundant indexes to keep writes fast
-
-
-
-*(Note: The PDF has questions numbered only up to 102, with some duplication in numbering. The content below covers the remaining distinct questions from the later pages.)*
 
 
 
@@ -1359,43 +1342,3 @@ WHERE revenue > ALL (SELECT revenue FROM amazon_sales WHERE department = 'Toys')
 UPDATE products SET quantity = 50, version = version + 1
 WHERE id = 1 AND version = 5;
 ```
-
-
-
-## Summary
-
-The PDF contains **108 total questions** (with some number duplication). Questions cover:
-
-| Topic Area | Question Numbers |
-|------------|------------------|
-| SQL Execution & Normalization | 1-5 |
-| Constraints & Keys | 6-7 |
-| Derived Columns & Transactions | 8-10 |
-| Subqueries & Set Operators | 12-14 |
-| Views | 15-18 |
-| Ranking Functions | 19-20 |
-| Temporary Tables & Variables | 21-23 |
-| SQL Injection & Joins | 24-27 |
-| DELETE/TRUNCATE/DROP | 28 |
-| Stored Procedures & Functions | 30-34 |
-| Triggers | 34-37 |
-| Error Handling & Cursors | 38-39 |
-| Indexing & Performance | 40-50, 100, 102 |
-| Date/Time Functions | 52 |
-| NULL Handling | 53-54 |
-| LEAD/LAG & Logical Operators | 55-56 |
-| String Functions | 57 |
-| DDL/DML/DCL/TCL | 58 |
-| Advanced Topics (MERGE, SCD, PIVOT, Auditing, etc.) | 60-72 |
-| JOIN Deep Dive | 73-85 |
-| GROUP BY/HAVING | 86-95 |
-| Partitioning & Backup | 96-98 |
-| Materialized Views | 99 |
-| View Updates & Index Selection | 101-102 |
-| UNION/IN/EXISTS/ANY/ALL | 103-105 |
-| SARGable & ACID | 106-107 |
-| Locking | 108 |
-
-
-
-Would you like me to save **all 108 questions with answers** to a single file (TXT or DOCX format) for easy reference?
